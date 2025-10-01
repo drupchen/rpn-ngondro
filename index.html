@@ -1,0 +1,516 @@
+<!-- Last updated for Version 2.1 -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ཡེ་ཤེས་བླ་མ།</title>
+    <link rel="stylesheet" href="css/hyperaudio-lite-player.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jomolhari" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.js"></script>
+    <style>
+      :root {
+        --primary-color: #4f6fa7; /* Softer blue */
+        --secondary-color: #475569;
+        --accent-color: #d48b4e; /* Soft amber/gold */
+        --background-color: #f7fafc;
+        --text-color: #23272f;
+        --light-gray: #f5f6fa;
+        --border-color: #e2e8f0;
+        --hover-color: #e3e7ee;
+        --timecode-bg: #f9f5e7;
+        --timecode-text: #d48b4e;
+        --active-bg: #f7f3e7;
+        --active-highlight: #d4a94e;
+        --card-shadow: 0 4px 16px rgba(79, 111, 167, 0.07), 0 1.5px 4px rgba(0, 0, 0, 0.06);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.7;
+        color: var(--text-color);
+        background-color: var(--background-color);
+        padding: 0;
+        margin: 0;
+        min-height: 100vh;
+        font-size: 1.07rem;
+        letter-spacing: 0.01em;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1.5rem 1rem;
+        }
+      }
+
+      header {
+        margin-bottom: 3rem;
+        text-align: center;
+        padding: 1.5rem 0;
+      }
+
+      h1 {
+        font-size: 2.7rem;
+        font-weight: 800;
+        margin-bottom: 1.1rem;
+        color: var(--secondary-color);
+        letter-spacing: -0.025em;
+        text-shadow: 0 2px 8px rgba(79, 111, 167, 0.05);
+      }
+
+      h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 2.5rem 0 1.2rem;
+        color: var(--secondary-color);
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0.6rem;
+        letter-spacing: -0.012em;
+      }
+
+      h3 {
+        font-size: 1.35rem;
+        font-weight: 500;
+        margin: 1.75rem 0 0.75rem;
+        color: var(--secondary-color);
+        letter-spacing: -0.01em;
+      }
+
+      audio {
+        width: 100%;
+        margin: 1rem 0 0;
+        border-radius: 21px;
+        box-shadow: var(--card-shadow);
+        height: 40px;
+        transition: all 0.3s ease;
+      }
+
+      audio:focus,
+      audio:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05), 0 3px 6px rgba(0, 0, 0, 0.08);
+        transform: translateY(-1px);
+      }
+
+      /* Audio player styling */
+
+      /* Session links styling */
+      /* Table of contents styling */
+
+      .toc-section {
+        background-color: #fff;
+        border-radius: 18px;
+        padding: 1.5rem 1.25rem;
+        margin: 2rem 0;
+        box-shadow: var(--card-shadow);
+        border: 1.5px solid var(--border-color);
+        transition: box-shadow 0.2s, border-color 0.2s;
+      }
+
+      .toc-section:last-child {
+        margin-bottom: 0;
+      }
+
+      .toc-section-title {
+        font-size: 1.22rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin-bottom: 1.3rem;
+        padding-bottom: 0.35rem;
+        border-bottom: 1.5px solid var(--border-color);
+        letter-spacing: 0.01em;
+      }
+      .toc-section-title .tibetan {
+        font-size: 1.5em;
+        line-height: 1.3em;
+      }
+
+      .toc-section-subtitle {
+        font-size: 0.9rem;
+        opacity: 0.6;
+      }
+
+      /* Session links styling */
+      .session-links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--light-gray);
+      }
+      .session-links:first-child {
+        padding-top: 0;
+      }
+      .session-links:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      /* Section dividers */
+      .section-divider {
+        margin: 8rem 0;
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, transparent, var(--border-color), transparent);
+      }
+
+      .session-links a {
+        text-decoration: none;
+        color: var(--primary-color);
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.3rem 0.7rem 0.3rem 1rem;
+        border-radius: 9999px;
+        background-color: var(--light-gray);
+        transition: all 0.18s;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 1.5px 5px rgba(79, 111, 167, 0.08);
+        width: fit-content;
+        gap: 0.7rem;
+      }
+
+      .session-links a:hover {
+        background-color: var(--hover-color);
+        box-shadow: 0 4px 12px rgba(212, 169, 78, 0.11);
+      }
+
+      .timecode {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--timecode-bg);
+        color: var(--timecode-text);
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        margin-left: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.02em;
+      }
+
+      .session {
+        font-size: 0.875rem;
+        font-weight: 500;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .session-links .tibetan {
+        font-size: 15pt;
+        color: #1d458c;
+        display: block;
+        text-align: center;
+        margin-bottom: 0.1em;
+        white-space: nowrap;
+      }
+      .session-links .english {
+        font-family: 'Inter', sans-serif;
+        display: block;
+        text-align: center;
+        margin-bottom: 0.05em;
+      }
+
+      .session-links .human-time {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--accent-color);
+        background-color: var(--timecode-bg);
+        padding: 0.22rem 0.7rem;
+        border-radius: 9999px;
+        min-width: 3.3rem;
+        text-align: center;
+        display: inline-block;
+        letter-spacing: 0.01em;
+        box-shadow: 0 1.5px 4px rgba(212, 169, 78, 0.07);
+      }
+
+      .tibetan {
+        font-family: Jomolhari, serif;
+        font-weight: normal;
+      }
+
+      .big {
+          font-size: 150%;
+          line-height: 100%;
+      }
+
+      .tibetan-no-recording {
+        font-family: Jomolhari, serif;
+        font-weight: normal;
+        color: Gray;
+
+      }
+
+      h2 {
+        margin-top: 2em;
+      }
+
+      h2 span.tibetan {
+        font-size: 1em;
+        display: block;
+        line-height: 1.3em;
+      }
+
+      /* Improve spacing for timecodes in transcript */
+      .hyperaudio-transcript .timecode {
+        position: relative;
+        top: 10px;
+        display: inline-flex;
+        justify-content: center;
+        min-width: 3.5rem;
+        margin: 0 5px;
+        padding: 0 !important;
+        vertical-align: top;
+      }
+
+      /* Transcript styling */
+      .hyperaudio-transcript {
+        resize: vertical;
+        overflow-y: auto;
+        max-height: 500px;
+        width: 100%;
+        scrollbar-gutter: stable;
+        position: relative;
+        border: 1.5px solid var(--border-color);
+        border-radius: 6px;
+        padding: 2.1rem 1.2rem;
+        background-color: #fff;
+        margin: 1.3rem 0 2.7rem;
+        font-family: Jomolhari, serif;
+        font-size: 1.6rem;
+        line-height: 1.85;
+        box-shadow: var(--card-shadow);
+        transition: box-shadow 0.3s, border-color 0.2s;
+      }
+
+      .hyperaudio-transcript a {
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .hyperaudio-transcript a:hover {
+        background: var(--hover-color);
+        border-color: var(--primary-color);
+      }
+      .hyperaudio-transcript a.active {
+        background-color: #d9f3fc !important;
+        border-color: #d9f3fc !important;
+      }
+
+      /* Custom scrollbar for modern look */
+      .hyperaudio-transcript::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .hyperaudio-transcript::-webkit-scrollbar-track {
+        background: var(--light-gray);
+        border-radius: 8px;
+      }
+
+      .hyperaudio-transcript::-webkit-scrollbar-thumb {
+        background-color: var(--border-color);
+        border-radius: 8px;
+      }
+
+      .hyperaudio-transcript::-webkit-scrollbar-thumb:hover {
+        background-color: var(--secondary-color);
+      }
+
+      .hyperaudio-transcript p > .active {
+        background-color: rgba(59, 130, 246, 0.2);
+        text-decoration: var(--active-highlight) underline;
+        text-decoration-thickness: 2px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .hyperaudio-transcript p > .unread:not(.active) {
+        opacity: 0.7;
+      }
+
+      #clipboard-text {
+        font-family: Jomolhari, monospace;
+        padding: 0.75rem;
+        background-color: var(--light-gray);
+        border-radius: 4px;
+        margin: 0.5rem 0;
+      }
+
+      #clipboard-confirm {
+        font-size: 0.875rem;
+        color: var(--accent-color);
+        margin-top: 0.5rem;
+      }
+
+      /* Tibetan text styling - preserving original fonts */
+      [lang='bo'] {
+        font-family: Jomolhari, serif;
+      }
+
+      /* unvisited link */
+      a:link {
+        color: black;
+        text-decoration: none;
+      }
+
+      /* visited link */
+      a:visited {
+        color: green;
+      }
+
+      /* mouse over link */
+      a:hover {
+        color: blue;
+        text-decoration: underline;
+      }
+
+      /* selected link */
+      a:active {
+        color: blue;
+      }
+
+      div .session-a {
+        background-color: #E0D7FF;
+      }
+
+      div .session-b {
+        background-color: #D7EEFF;
+      }
+
+      div .session-c {
+        background-color: #FAFFC7;
+      }
+    </style>
+  </head>
+<body>
+  <div class="toc-section">
+
+<span class="tibetan-no-recording">
+
+    <span class="big">༄༅། གུ་རུའི་ཐུགས་སྒྲུབ་དངོས་གྲུབ་སྙིང་པོ་ལས། སྔོན་འགྲོའི་ངག་འདོན་ཟབ་ལམ་སྣང་བྱེད་བཞུགས་སོ། །</span>
+    <br><br>
+
+    <a href="sessions/transcript_A1.html#hypertranscript1=0.66,57.94"><span class="session-a"><span class="session">A1 </span><span class="tibetan"><span class="big">༄༅། །ན་མོ་གུ་རུ་བྷྱཿ </span>འདིར་རྩ་གསུམ་གཅིག་དྲིལ་ཐུགས་སྒྲུབ་དངོས་གྲུབ་སྙིང་པོའི་དབང་བཞིའི་ལམ་ཡོངས་སུ་རྫོགས་པ་ཉམས་སུ་ལེན་པ་ལ་མེད་དུ་མི་རུང་བ་སྔོན་འགྲོའི་ངག་འདོན་འཇུག་བདེར་བསྡེབ་པ་ལ་གསུམ། ཐུན་གྱི་སྔོན་འགྲོ། ཐུན་མོང་གི་སྔོན་འགྲོ། ཁྱད་པར་གྱི་སྔོན་འགྲོའོ། །</span></span></a>
+    <br><br>
+
+<a href="sessions/transcript_A1.html#hypertranscript1=57.94,96.00"><span class="session-a"><span class="session">A1 </span><span class="tibetan">དང་པོ་ནི། ཐོག་མར་བདེ་བའི་སྟན་ལ་སྒོ་གསུམ་བག་ཕབ་སྟེ་ངལ་གསོ། </span></span></a>
+<a href="sessions/transcript_A1.html#hypertranscript1=96.00,351.17"><span class="session-a"><span class="session">A1 </span><span class="tibetan">རླུང་རོ་བསལ། ལུས་སེམས་ཁོང་ལྷོད་ནས་</span></span></a>
+
+    <a href="sessions/transcript_A3.html#hypertranscript1=0.00,37.71"><span class="session-a"><span class="session">A3 </span><span class="tibetan">རླུང་རོ་བསལ། </span></span></a>
+
+<a href="sessions/transcript_A1.html#hypertranscript1=351.17,586.49"><span class="session-a"><span class="session">A1 </span><span class="tibetan">ཀུན་སློང་ལེགས་པར་བཅོས་ཏེ། </span></span></a>
+    <a href="sessions/transcript_A1.html#hypertranscript1=586.49,821.12"><span class="session-a"><span class="session">A1 </span><span class="tibetan"><span class="big">ཨེ་མ་ཧོཿ </span></span></span></a>
+    <a href="sessions/transcript_A1.html#hypertranscript1=821.12,1109.46"><span class="session-a"><span class="session">A1 </span><span class="tibetan"><span class="big">སྐྱབས་གནས་ཀུན་འདུས་ཁྱབ་བདག་འཁོར་ལོའི་མགོན༔ སྙིང་དབུས་འོད་གསལ་དབུ་མའི་ཕོ་བྲང་ནས༔ </span></span></span></a>
+    <a href="sessions/transcript_A2.html#hypertranscript1=0.00,305.92"><span class="session-a"><span class="session">A2 </span><span class="tibetan"><span class="big">མདུན་གྱི་ནམ་མཁར་ཡིད་འཕྲོག་མཆོད་སྤྲིན་དབུས༔ མངོན་སུམ་གཤེགས་ནས་བདག་རྒྱུད་བྱིན་གྱིས་རློབས༔ མོས་གུས་གཞལ་མེད་ཕོ་བྲང་ཉམས་དགའ་བར། །</span></span></span></a>
+    <a href="sessions/transcript_A2.html#hypertranscript1=305.92,580.21"><span class="session-a"><span class="session">A2 </span><span class="tibetan"><span class="big">རིང་ནས་འཁྱུད་པའི་དྲིན་ཆེན་བླ་མའི་ཞལ། །</span></span></span></a>
+    <a href="sessions/transcript_A2.html#hypertranscript1=580.21,681.24"><span class="session-a"><span class="session">A2 </span><span class="tibetan"><span class="big">ཡང་ཡང་དྲན་པས་རྟག་ཏུ་ཕྱག་བགྱིད་ན། །དངོས་གྲུབ་རྒྱ་མཚོའི་གནས་ལ་གེགས་མེད་མཛོད།</span> ཅེས་དང༌། </span></span></a>
+    <a href="sessions/transcript_A2.html#hypertranscript1=681.24,801.47"><span class="session-a"><span class="session">A2 </span><span class="tibetan"><span class="big">དུས་གསུམ་སངས་རྒྱས་ཐམས་ཅད་ཀྱི་ངོ་བོ་བཀའ་དྲིན་མཚུངས་པ་མེད་པའི་གཏེར་ཆེན་བླ་མ་རིན་པོ་ཆེ་མཁྱེན་ནོ། བདག་གི་རྒྱུད་སྨིན་ཅིང་གྲོལ་བར་བྱིན་གྱིས་བརླབ་ཏུ་གསོལ། ཟབ་ལམ་གྱི་རྟོགས་པ་ཁྱད་པར་ཅན་རྒྱུད་ལ་སྐྱེ་བར་བྱིན་གྱིས་བརླབ་ཏུ་གསོལ། ཚེ་འདི་ཉིད་ལ་ཕྱག་རྒྱ་ཆེན་པོ་མཆོག་གི་དངོས་གྲུབ་ཐོབ་པར་མཛད་དུ་གསོལ། </span>ཞེས་གསོལ་བ་ཕུར་ཚུགས་སུ་གདབ། </span></span></a>
+    <br><br>
+
+
+<a href="sessions/transcript_A4.html#hypertranscript1=0.00,354.53"><span class="session-a"><span class="session">A4 </span><span class="tibetan">གཉིས་པ་ཐུན་མོང་གི་སྔོན་འགྲོ་ནི།  <span class="big">དལ་བརྒྱད་འབྱོར་བཅུས་བརྒྱན་པའི་མི་ལུས་འདི༔ དཔེ་གྲངས་རྒྱུ་དང་ངོ་བོས་རྙེད་དཀའ་ཞིང༔ དོན་ཆེན་སྒྲུབ་པའི་མཆོག་ཏུ་ངེས་མཐོང་ནས༔ རྩེ་གཅིག་སྙིང་པོ་ལོན་པར་བྱིན་གྱིས་རློབས༔ </span>དམ་པའི་ཆོས་སྒྲུབ་བྱེད་རྟེན་དལ་འབྱོར་རྙེད་དཀའ་བའི་དམིགས་རྐང་དང་པོ་དང༌། </span></span></a>
+    <a href="sessions/transcript_A4.html#hypertranscript1=354.53,542.57"><span class="session-a"><span class="session">A4 </span><span class="tibetan"><span class="big">ཕྱི་ནང་སྣོད་བཅུད་དགྲ་གཉེན་བར་མ་སོགས༔ གང་ལ་བསམས་ཀྱང་མི་རྟག་འཇིག་པའི་ཕྱིར༔ ལོང་མེད་འཆི་བ་དྲན་པའི་བརྩོན་འགྲུས་ཀྱིས༔ ཚེ་འདིའི་མངོན་ཞེན་ལྡོག་པར་བྱིན་གྱིས་རློབས༔ </span>ཆོས་ལ་བསྐུལ་བའི་རྐྱེན་འདུས་བྱས་མི་རྟག་པར་བསམ་པའི་དམིགས་རྐང་གཉིས་པ་དང༌། </span></span></a>
+    <a href="sessions/transcript_A4.html#hypertranscript1=542.57,750.02"><span class="session-a"><span class="session">A4 </span><span class="tibetan"><span class="big">འཆི་ཚེ་དཀར་ནག་ལས་ཀྱི་གཞན་དབང་གིས༔ ཁམས་གསུམ་རིགས་དྲུག་མཐོ་དམན་སྣ་ཚོགས་སུ༔ བདེ་སྡུག་འབྲས་བུ་མི་བསླུ་སྨིན་པའི་ཕྱིར༔ བླང་དོར་ཚུལ་བཞིན་ནུས་པར་བྱིན་གྱིས་རློབས༔ </span>ཆོས་ཀྱི་གནད་ལས་རྒྱུ་འབྲས་ལ་ཡིད་ཆེས་བསྐྱེད་པའི་དམིགས་རྐང་གསུམ་པ་དང༌། </span></span></a>
+    <a href="sessions/transcript_A4.html#hypertranscript1=750.02,790.74"><span class="session-a"><span class="session">A4 </span><span class="tibetan"><span class="big">དམྱལ་བ་</span></span></span></a>
+
+    <a href="sessions/transcript_A5.html#hypertranscript1=0.00,153.27"><span class="session-a"><span class="session">A5 </span><span class="tibetan"><span class="big">ཚ་གྲང་ཡི་དྭགས་བཀྲེས་སྐོམ་དང༔ དུད་འགྲོ་བཀོལ་སྤྱོད་སྡུག་བསྔལ་མཐའ་ཡས་ཤིང༔ མཐོ་རིས་ན་ཡང་བདེ་བའི་སྐབས་མེད་པས༔ ངེས་འབྱུང་དྲག་པོ་སྐྱེ་བར་བྱིན་གྱིས་རློབས༔ </span>ཆོས་ཀྱི་སྲོག་འཁོར་བའི་ཉེས་དམིགས་ཀྱིས་ངེས་འབྱུང་བསྐྱེད་པའི་དམིགས་རྐང་བཞི་པ་དང༌། </span></span></a>
+    <a href="sessions/transcript_A5.html#hypertranscript1=153.27,391.67"><span class="session-a"><span class="session">A5 </span><span class="tibetan"><span class="big">དེ་ལས་སྐྱོབ་པའི་དེད་དཔོན་གཅིག་གྱུར་པ༔ མཚན་ལྡན་བླ་མ་དགེ་བའི་བཤེས་གཉེན་མཆོག༔ མཉེས་པ་གསུམ་གྱི་བྱ་བས་ལེགས་བསྟེན་ནས༔ ཐོས་བསམ་སྒོམ་ལ་བརྩོན་པར་བྱིན་གྱིས་རློབས༔ </span>ཆོས་ཀྱི་སྒོ་འབྱེད་དགེ་བའི་བཤེས་གཉེན་བསྟེན་ཚུལ་དང་ཐར་པའི་ཕན་ཡོན་བསྟན་པའི་དམིགས་རྐང་ལྔ་པའོ། །</span></span></a>
+    <a href="sessions/transcript_A6.html#hypertranscript1=0.00,81.17"><span class="session-a"><span class="session">A6 </span><span class="tibetan"><span class="big">བྱིན་གྱིས་རློབས་ཤིག་དྲིན་ཅན་བླ་མ་རྗེ༔ དངོས་གྲུབ་སྩོལ་ཅིག་འཆི་མེད་ཐོད་ཕྲེང་རྩལ༔ བར་ཆད་སོལ་ཅིག་མཁའ་འགྲོ་ཆོས་སྐྱོང་ཚོགས༔ སྙིང་ནས་དྲན་ནོ་ཐུགས་རྗེའི་སྤྱན་གྱིས་གཟིགས༔ </span>ཞེས་འདོད་པའི་དོན་ལ་</span></span></a>
+<a href="sessions/transcript_A6.html#hypertranscript1=81.17,127.59"><span class="session-a"><span class="session">A6 </span><span class="tibetan">གསོལ་བ་གདབ་པས་མཚམས་སྦྱར་རོ། །</span></span></a>
+    <br><br>
+
+<a href="sessions/transcript_A7.html#hypertranscript1=0.00,580.97"><span class="session-a"><span class="session">A7 </span><span class="tibetan">གཉིས་པ་ཁྱད་པར་གྱི་སྔོན་འགྲོ་ལ་སྐྱབས་འགྲོ། སེམས་བསྐྱེད། རྡོར་སེམས་བསྒོམ་བཟླས། བླ་མའི་རྣལ་འབྱོར་ལ་བརྟེན་ནས་བསགས་སྦྱང་གསོལ་བ་གདབ་པའོ། །དང་པོ་ནི། དེ་ལྟ་བུའི་འཇིགས་རུང་འཁོར་བའི་སྡུག་བསྔལ་དེ་ལས་རང་གཞན་སེམས་ཅན་ཐམས་ཅད་བསྒྲལ་བའི་ཕྱིར་བླ་མ་དང་དཀོན་མཆོག་གསུམ་ལ་སྐྱབས་སུ་འགྲོ་བར་བགྱིའོ་སྙམ་པའི་སྐྱེས་བུ་ཆེན་པོའི་བློས། </span></span></a>
+    <a href="sessions/transcript_A7.html#hypertranscript1=580.97,686.44"><span class="session-a"><span class="session">A7 </span><span class="tibetan"><span class="big">རང་ཉིད་གང་དུ་གནས་པའི་ས་ཕྱོགས་ཐམས་ཅད་རིན་པོ་ཆེ་སྣ་ཚོགས་ལས་གྲུབ་པའི་ཞིང་ཁམས་མཛེས་ཤིང་ཡིད་དུ་འོང་བའི་གཞིར་དཔག་བསམ་ལྗོན་ཤིང་ཡལ་ག་ལྔ་པ། ལོ་འདབ་དང་མེ་ཏོག་འབྲས་བུ་ཕུན་སུམ་ཚོགས་པ་ལ་རིན་པོ་ཆེའི་འཕྱང་འཕྲུལ་དྲིལ་གཡེར་ལ་སོགས་པས་རྣམ་པར་བརྒྱན་པ་ནམ་མཁའི་དབྱིངས་ཀུན་ཁྱབ་པའི་དབུས་སུ་སེང་གེས་བཏེགས་པའི་རིན་པོ་ཆེའི་ཁྲི་སྣ་ཚོགས་པདྨ་ཉི་ཟླ་བརྩེགས་པའི་གདན་ལ་</span></span></span></a>
+    <a href="sessions/transcript_A7.html#hypertranscript1=686.44,725.69"><span class="session-a"><span class="session">A7 </span><span class="tibetan"><span class="big">སངས་རྒྱས་ཀུན་འདུས་ཀྱི་ངོ་བོ་རྩ་བའི་བླ་མ་ཨོ་རྒྱན་རྡོ་རྗེ་འཆང་སྐུ་མདོག་སྔོན་པོ་རྡོ་རྗེ་དང་དྲིལ་བུ་འཛིན་པ། ཡུམ་མཚོ་རྒྱལ་དཀར་མོ་གྲི་གུག་དང་ཐོད་པ་འཛིན་པ་དང་མཉམ་པར་སྦྱོར་བ། དར་དང་རུས་པའི་རྒྱན་གྱིས་བརྒྱན་ཅིང༌། ཞབས་རྡོ་རྗེའི་སྐྱིལ་ཀྲུང་གིས་བཞུགས་པའི་དབུ་གཙུག་ཏུ་བརྒྱུད་གསུམ་བླ་མ་རྣམས་ཐོ་བརྩེགས་སུ་བཞུགས་ཤིང༌། གཞན་ཡང་རྩ་བརྒྱུད་ཀྱི་བླ་མ་དམ་པ་རྣམས་དང༌། གནས་གསུམ་གྱི་དཔའ་བོ་མཁའ་འགྲོ་བསམ་གྱིས་མི་ཁྱབ་པས་མཐའ་ནས་བསྐོར་བ། </span></span></span></a>
+    <a href="sessions/transcript_A7.html#hypertranscript1=725.69,784.17"><span class="session-a"><span class="session">A7 </span><span class="tibetan"><span class="big">མདུན་གྱི་ཡལ་ག་ལ་ཁྱད་པར་གྱི་སངས་རྒྱས་དཔལ་རྡོ་རྗེ་སེམས་དཔའ་ལ་ཡི་དམ་རྒྱུད་སྡེ་དྲུག་གི་ལྷ་ཚོགས་ཀྱིས་བསྐོར་བ། གཡས་ཀྱི་ཡལ་གར་ཐུན་མོང་གི་སངས་རྒྱས་ཤཱཀྱ་ཐུབ་པ་སོགས་དུས་གསུམ་གྱི་སངས་རྒྱས་མཆོག་གི་སྤྲུལ་པའི་སྐུ་རྣམས་དང༌། གཡོན་གྱི་ཡལ་ག་ལ་ཉེ་བའི་སྲས་བརྒྱད་སོགས་ཐེག་ཆེན་བྱང་སེམས་དང་ཉན་རང་གི་དགེ་འདུན་འཕགས་པའི་ཚོགས། རྒྱབ་ཀྱི་ཡལ་གར་ཆོས་དཀོན་མཆོག་གླེགས་བམ་བརྩེགས་པའི་རྣམ་པ་ཅན་ཁ་དོག་དམར་པོ་ཨཱ་ལི་ཀཱ་ལིའི་རང་སྒྲ་སྒྲོགས་པ་དང༌། </span></span></span></a>
+    <a href="sessions/transcript_A7.html#hypertranscript1=784.17,821.21"><span class="session-a"><span class="session">A7 </span><span class="tibetan"><span class="big">དེ་དག་གི་བར་མཚམས་ཐམས་ཅད་དུ་ཡེ་ཤེས་དང་ལས་ལས་གྲུབ་པའི་ཆོས་སྲུང་དམ་ཅན་རྒྱ་མཚོའི་ཚོགས་ཀྱིས་བར་མེད་དུ་གང་བ། ཐམས་ཅད་ཀྱང་མཁྱེན་བརྩེ་ནུས་གསུམ་གྱི་ཡོན་ཏན་དཔག་ཏུ་མེད་པ། རྩ་བའི་བླ་མའི་ཐུགས་ཡེ་ཤེས་གཅིག་གི་རོལ་པ་ལས་མ་འདས་པ། བདག་ཉིད་ལ་རྗེས་སུ་བརྩེ་ཞིང་འདྲེན་པའི་དེད་དཔོན་ཆེན་པོར་མངོན་སུམ་དུ་བཞུགས་པར་</span>བསམ་ལ། </span></span></a>
+    <a href="sessions/transcript_A7.html#hypertranscript1=821.21,969.61"><span class="session-a"><span class="session">A7 </span><span class="tibetan"><span class="big">དེའི་མདུན་དུ་རང་གཞན་རིགས་དྲུག་གི་སེམས་ཅན་ཐམས་ཅད་སྒོ་གསུམ་འཇུག་པ་གཅིག་པས་འདི་ནས་བྱང་ཆུབ་སྙིང་པོ་ལ་མཆིས་ཀྱི་བར་དུ་བླ་མ་ལ་འདྲེན་པ། ཡི་དམ་དང་སངས་རྒྱས་ལ་སྟོན་པ། ཆོས་ལ་ལམ། མཁའ་འགྲོ་ཆོས་སྐྱོང་དགེ་འདུན་ལ་ལམ་སྒྲུབ་པའི་ཟླ་གྲོགས་ཞུ་བའི་ཚུལ་གྱིས་བདག་ཅག་རྣམས་ཁྱེད་ལ་བསྟེན། ཁྱེད་ལ་འབུལ། ཁྱེད་ལས་གཞན་པའི་སྐྱབས་དང་རེ་ས་མེད་པས་ཅི་མཛད་ཁྱེད་མཁྱེན་སྙམ་པའི་གདུང་བ་དྲག་པོས་སྐྱབས་སུ་འགྲོ་བར་མོས་ཏེ། ན་མོཿ བླ་མ་སངས་རྒྱས་རིན་པོ་ཆེ༔ སྐྱབས་གནས་རྒྱ་མཚོའི་ཡེ་ཤེས་སྐུ༔ མཁྱེན་བརྩེ་ནུས་པའི་བདག་ཉིད་ལ༔ མི་ཕྱེད་དད་པས་སྐྱབས་སུ་མཆི༔ </span>ཞེས་སྐྱབས་འགྲོ་ཅི་ནུས་བྱ། </span></span></a>
+    <a href="sessions/transcript_A7.html#hypertranscript1=969.61,1393.74"><span class="session-a"><span class="session">A7 </span><span class="tibetan"><span class="big">མཐར་སྐྱབས་ཡུལ་རྣམས་ཀྱི་ཐུགས་ཀ་ནས་འོད་ཟེར་འཕྲོས། བདག་དང་སེམས་ཅན་ཐམས་ཅད་ཀྱི་ལུས་སེམས་ལ་ཞུགས། སྒྲིབ་གཉིས་བག་ཆགས་དང་བཅས་པ་དག །ཚེ་དང་བསོད་ནམས་ལུང་རྟོགས་ཀྱི་ཡོན་ཏན་ལ་སོགས་པ་གོང་ནས་གོང་དུ་འཕེལ་ཞིང་རྒྱས་པར་</span>བསམ་ལ་སེམས་འཛིན་མེད་ཀྱི་ངང་དུ་མཉམ་པར་བཞག་གོ །</span></span></a>
+    <br><br>
+
+<a href="sessions/transcript_A8.html#hypertranscript1=0.00,226.03"><span class="session-a"><span class="session">A8 </span><span class="tibetan">གཉིས་པ་ནི། འདི་ལྟར་མཁའ་ཁྱབ་ཀྱི་སེམས་ཅན་ཐམས་ཅད་ཚེ་རབས་ཐོག་མ་མེད་པ་ནས་དགྲས་ཀྱང་གཉེན་བྱས། གཉེན་གྱིས་ཀྱང་དགྲ་བྱས་པ་སོགས་དགྲ་གཉེན་ངེས་པ་མེད་ཅིང༌། ཚེ་འདི་དང་མ་འོངས་པ་ནའང་དགྲ་གཉེན་ངེས་མེད་འགྱུར་བར་བསམ་ནས་ཉེ་རིང་ཆགས་སྡང་དང་བྲལ་བའི་སེམས་བཏང་སྙོམས་ཐོག་མར་བསྐྱེད་ཅིང༌། </span></span></a>
+<a href="sessions/transcript_A8.html#hypertranscript1=226.03,478.53"><span class="session-a"><span class="session">A8 </span><span class="tibetan">དེ་ནས་དེ་ཐམས་ཅད་རང་གི་ཕ་མ་དྲིན་ཅན་ཤ་སྟག་ཡིན་པའི་ཕྱིར། </span></span></a>
+<a href="sessions/transcript_A8.html#hypertranscript1=478.53,541.78"><span class="session-a"><span class="session">A8 </span><span class="tibetan">དྲིན་གཟོ་བའི་སླད་དུ་བདེ་བ་དང་འཕྲད་འདོད་ཀྱི་བྱམས་པ། </span></span></a>
+<a href="sessions/transcript_A8.html#hypertranscript1=541.78,557.33"><span class="session-a"><span class="session">A8 </span><span class="tibetan">སྡུག་བསྔལ་དང་བྲལ་འདོད་ཀྱི་སྙིང་རྗེ། </span></span></a>
+<a href="sessions/transcript_A8.html#hypertranscript1=557.33,575.91"><span class="session-a"><span class="session">A8 </span><span class="tibetan">དེ་ལྟ་བུ་དང་མི་འབྲལ་བ་བྱུང་ན་རེ་དགའ་སྙམ་པའི་དགའ་བ་སྟེ་</span></span></a>
+<a href="sessions/transcript_A8.html#hypertranscript1=575.91,753.03"><span class="session-a"><span class="session">A8 </span><span class="tibetan">ཚད་མེད་བཞིས་བློ་སྦྱངས་པའི་མཐར། </span></span></a>
+    <a href="sessions/transcript_A8.html#hypertranscript1=753.03,852.57"><span class="session-a"><span class="session">A8 </span><span class="tibetan">སྐྱབས་ཡུལ་རྣམས་དཔང་པོར་བཞུགས་པའི་ཚུལ་གྱིས། <span class="big">ཧོཿ ནམ་མཁའ་མཉམ་པའི་སེམས་ཅན་རྣམས༔ མེད་སྣང་འཁོར་བའི་ཆོས་ལ་ཞེན༔ སྡུག་བསྔལ་མཚོ་ལས་བསྒྲལ་བའི་ཕྱིར༔ བྱང་ཆུབ་བསྒྲུབ་པར་སེམས་བསྐྱེད་དོ༔ </span>ཞེས་གྲངས་བསོག །སྤྲོ་ན་བར་འདིར་བདག་གཞན་མཉམ་བརྗེའི་བློ་སྦྱོང་དང༌། ཁྱད་པར་དབུགས་འགྲོ་འོང་དང་བསྟུན་ཏེ་བདེ་སྡུག་གཏོང་ལེན་གྱི་དམིགས་པའང་ཉམས་སུ་བླང་ཞིང་བདག་མེད་</span></span></a>
+<a href="sessions/transcript_A9.html#hypertranscript1=0.00,350.31"><span class="session-a"><span class="session">A9 </span><span class="tibetan">རྣམ་གཉིས་ཀྱི་ངེས་པས་དྲངས་པའི་ཞི་ལྷག་ཟུང་འཇུག་</span></span></a>
+
+    <a href="sessions/transcript_A10.html#hypertranscript1=0.00,139.21"><span class="session-a"><span class="session">A10 </span><span class="tibetan"><span class="big">ཧོཿ ནམ་མཁའ་མཉམ་པའི་སེམས་ཅན་རྣམས༔ མེད་སྣང་འཁོར་བའི་ཆོས་ལ་ཞེན༔ སྡུག་བསྔལ་མཚོ་ལས་བསྒྲལ་བའི་ཕྱིར༔ བྱང་ཆུབ་བསྒྲུབ་པར་སེམས་བསྐྱེད་དོ༔ </span>ཞེས་གྲངས་བསོག །སྤྲོ་ན་བར་འདིར་བདག་གཞན་མཉམ་བརྗེའི་བློ་སྦྱོང་དང༌། ཁྱད་པར་དབུགས་འགྲོ་འོང་དང་བསྟུན་ཏེ་བདེ་སྡུག་གཏོང་ལེན་གྱི་དམིགས་པའང་ཉམས་སུ་བླང་ཞིང་བདག་མེད་རྣམ་གཉིས་ཀྱི་ངེས་པས་དྲངས་པའི་ཞི་ལྷག་ཟུང་འཇུག་དོན་དམ་པའི་བྱང་ཆུབ་སེམས་ཀྱང་ཅི་རིགས་སུ་སྒོམ། </span></span></a>
+    <span class="big">མཐར་བདག་གཞན་སེམས་ཅན་ཐམས་ཅད་སྐྱབས་ཡུལ་ལ་ཐིམ། དེ་རྣམས་ཀྱང་དབུས་ཀྱི་བླ་མ་ལ་ཐིམ། དེ་ཡང་ཆོས་སྐུ་སྤྲོས་བྲལ་གདོད་མའི་དབྱིངས་སུ་བསྟིམས་</span>ནས་མཉམ་པར་བཞག་གོ །
+    <br><br>
+
+<a href="sessions/transcript_A11.html#hypertranscript1=0.00,108.00"><span class="session-a"><span class="session">A11 </span><span class="tibetan">གསུམ་པ་ནི། </span></span></a>
+    <a href="sessions/transcript_A11.html#hypertranscript1=108.00,191.85"><span class="session-a"><span class="session">A11 </span><span class="tibetan"><span class="big">ཨ། བདག་ཉིད་སྤྱི་བོར་པད་ཟླའི་སྟེང༔ བླ་མ་རྡོར་སེམས་ཡབ་ཡུམ་གྱི༔ ཐུགས་ཀའི་ཧཱུྃ་ལས་བདུད་རྩིའི་རྒྱུན༔ བབས་པས་ནད་གདོན་སྡིག་སྒྲིབ་སྦྱངས༔ །</span>ཞེས་བརྗོད་དེ་བདག་ཉིད་ཐ་མལ་དུ་གནས་པའི་སྤྱི་བོར་པད་ཟླའི་སྟེང་དུ་བླ་མ་རྡོ་རྗེ་སེམས་དཔའ་ཡབ་ཡུམ་སྐུ་མདོག་དཀར་གསལ་མཚན་དཔེའི་ཉམས་འགྱུར་ཡོངས་སུ་རྫོགས་པར་གསལ་བཏབ་ནས། </span></span></a>
+<a href="sessions/transcript_A11.html#hypertranscript1=191.85,257.28"><span class="session-a"><span class="session">A11 </span><span class="tibetan">མོས་གུས་གདུང་ཤུགས་དྲག་པོས་བདག་གི་ཤེས་རྒྱུད་ཀྱི་སྡིག་སྒྲིབ་ཐམས་ཅད་དག་པ་ཞིག་ཁྱེད་མཁྱེན་ནོ་སྙམ་པ་རྟེན་གྱི་སྟོབས། སྔར་བྱས་ཀྱི་སྡིག་པ་ལ་འགྱོད་སེམས་ཤུགས་དྲག་ཏུ་བྱེད་པ་རྣམ་པར་སུན་འབྱིན་པའི་སྟོབས། ཕྱིན་ཆད་སྲོག་ལ་བབ་ཀྱང་མི་བྱེད་སྙམ་པ་ཉེས་བྱས་སྡོམ་པའི་སྟོབས། སྔར་བྱས་ཀྱི་གཉེན་པོར་རྡོར་སེམས་ཀྱི་ཐུགས་ཀར་ཧཱུྃ་ཡིག་གི་མཐར་ཡིག་བརྒྱའི་སྔགས་ཕྲེང་དཀར་པོ་སྤུ་ཤད་ཀྱིས་བྲིས་པ་ལྟ་བུ་གཡས་བསྐོར་དུ་གསལ་བ་ལ་ཀློག་པའི་ཚུལ་གྱིས་ཅུང་ཟད་བཟླས་པས། དེ་ལས་བདུད་རྩི་དཀར་པོ་འོད་ཟེར་དང་བཅས་པ་དཔག་ཏུ་མེད་པ་བབ་ནས་ཡབ་ཡུམ་གྱི་སྐུའི་དབྱིབས་བརྒྱུད་སྦྱོར་མཚམས་ནས་བྱུང༌། </span></span></a>
+<a href="sessions/transcript_A11.html#hypertranscript1=257.28,318.50"><span class="session-a"><span class="session">A11 </span><span class="tibetan">པད་མའི་སྡོང་བུ་ལ་འཁྲིལ་བའི་ཚུལ་གྱིས་རང་གི་ཚངས་བུག་ནས་ཞུགས་ཏེ། ཤྭ་འུད་ཆེན་པོའི་སྣ་ལ་སྦུར་མི་ཆགས་པ་ལྟར་ནད་ཐམས་ཅད་རྣག་ཁྲག །གདོན་ཐམས་ཅད་སྲོག་ཆག །སྡིག་སྒྲིབ་ཐམས་ཅད་དུད་སོལ་ཁུ་རླངས་ཀྱི་རྣམ་པས་བ་སྤུའི་བུ་ག་དང་འོག་སྒོ་གཉིས་ནས་ཐོན། ས་རིམ་པ་དགུའི་འོག་ཏུ་འཆི་བདག་གླང་དམར་པོའི་རྣམ་པར་གནས་པའི་ཁ་གདངས་པའི་ནང་དུ་ཞུགས། ལྟོ་བར་ཚུད་པས་དུས་མ་ཡིན་པའི་འཆི་བ་བསླུས་པར་བསམ་ལ་ཡི་གེ་བརྒྱ་པ་ཅི་ནུས་བཟླ་བ་</span></span></a>
+
+    <a href="sessions/transcript_A12.html#hypertranscript1=0.00,145.67"><span class="session-a"><span class="session">A12 </span><span class="tibetan">གཉེན་པོ་ཀུན་ཏུ་སྤྱོད་པའི་སྟོབས་བཞིའི་གནད་དང་ལྡན་པས་ཉམས་སུ་བླངས་མཐར། <span class="big">མགོན་པོ་བདག་ནི་མི་ཤེས་རྨོངས་པ་ཡིས། །དམ་ཚིག་ལས་ནི་འགལ་ཞིང་ཉམས། །བླ་མ་མགོན་པོས་སྐྱབས་མཛོད་ཅིག །གཙོ་བོ་རྡོ་རྗེ་འཛིན་པ་སྟེ། །ཐུགས་རྗེ་ཆེན་པོའི་བདག་ཉིད་ཅན། །འགྲོ་བའི་གཙོ་ལ་བདག་སྐྱབས་མཆི། །སྐུ་གསུང་ཐུགས་རྩ་བ་དང་ཡན་ལག་གི་དམ་ཚིག་ཉམས་པ་ཐམས་ཅད་མཐོལ་ལོ་བཤགས་སོ། །སྡིག་པ་དང་སྒྲིབ་པ་ཉེས་ལྟུང་དྲི་མའི་ཚོགས་བྱང་ཞིང་དག་པར་མཛད་དུ་གསོལ། </span>ཞེས་སྐྱབས་གསོལ་གྱི་ཚིག་བརྗོད་པ་དང༌། </span></span></a>
+    <a href="sessions/transcript_A12.html#hypertranscript1=145.67,266.12"><span class="session-a"><span class="session">A12 </span><span class="tibetan"><span class="big">རང་རྒྱུད་ཀྱི་སྡིག་ལྟུང་དག་པ་ལ་བླ་མ་རྡོ་རྗེ་སེམས་དཔའ་ཐུགས་དགྱེས་པས་ཞལ་འཛུམ་མདངས་སུ་བཞད་ཅིང༌། རིགས་ཀྱི་བུ་ཁྱོད་ཀྱི་སྡིག་སྒྲིབ་ཉེས་ལྟུང་ཐམས་ཅད་དག་པ་ཡིན་ནོ། །ཞེས་གསུང་གིས་དངོས་སུ་གནང་བ་བྱིན་པ་དང་ཆབས་ཅིག་བདེ་སྟོང་ཆེན་པོའི་ངོ་བོར་འོད་དུ་ཞུ་ནས་རང་ལ་ཐིམ་པར་གྱུར་</span>པས་</span></span></a>
+<a href="sessions/transcript_A12.html#hypertranscript1=266.12,594.10"><span class="session-a"><span class="session">A12 </span><span class="tibetan">རང་གནས་ཡེ་ཤེས་གཉུག་མའི་གནས་ལུགས་དོན་གྱི་རྡོ་རྗེ་སེམས་དཔའི་རང་ཞལ་བལྟས་ལ་མཉམ་པར་བཞག །</span></span></a>
+    <br><br>
+
+<a href="sessions/transcript_A13.html#hypertranscript1=0.00,691.62"><span class="session-a"><span class="session">A13 </span><span class="tibetan">བཞི་པ་ནི། </span></span></a>
+    <a href="sessions/transcript_A13.html#hypertranscript1=691.62,1015.63"><span class="session-a"><span class="session">A13 </span><span class="tibetan"><span class="big">རང་ལུས་རྒྱལ་ཡུམ་རྡོ་རྗེ་རྣལ་འབྱོར་མ། །</span></span></span></a>
+    <a href="sessions/transcript_A13.html#hypertranscript1=1015.63,1131.26"><span class="session-a"><span class="session">A13 </span><span class="tibetan"><span class="big">དམར་གསལ་གྲི་ཐོད་ཕྱག་རྒྱ་ལྔས་སྤྲས་པ། །བརྐྱང་བསྐུམ་སྟབས་ཀྱིས་པད་ཉི་བམ་རོ་བརྫིས། །བདེ་སྟོང་ཡེ་ཤེས་མེ་དཔུང་དབུས་རོལ་པའི། །</span></span></span></a>
+    <a href="sessions/transcript_A13.html#hypertranscript1=1131.26,1207.44"><span class="session-a"><span class="session">A13 </span><span class="tibetan"><span class="big">སྤྱི་བོ་ཛ་ལནྡྷ་རའི་དཀྱིལ་འཁོར་དུ། །པད་དཀར་ཟླ་སྟེང་ཁྱབ་བདག་ཧེ་རུ་ཀཿ །སྐུ་མདོག་དཀར་དམར་བདེ་སྟོང་སྙོམས་འཇུག་མདངས། །ཕྱག་གཉིས་ཐབས་ཤེས་རྡོ་རྗེ་དྲིལ་བུས་མཚན། །གཅེར་བུ་རུས་པའི་ཕྱག་རྒྱ་དྲུག་གིས་སྤྲས། །</span></span></span></a>
+    <a href="sessions/transcript_A13.html#hypertranscript1=1207.44,1220.32"><span class="session-a"><span class="session">A13 </span><span class="tibetan"><span class="big">དབྱིངས་ཕྱུག་སྔོན་མོ་ཡུམ་དང་འཁྲིལ་བར་བསྒོམ། །</span></span></span></a>
+    <a href="sessions/transcript_A13.html#hypertranscript1=1220.32,1399.91"><span class="session-a"><span class="session">A13 </span><span class="tibetan"><span class="big">འཁོར་དུ་བརྒྱུད་གསུམ་བླ་མ་ཡི་དམ་ལྷ། །སངས་རྒྱས་བྱང་སེམས་དཔའ་བོ་དྷཱ་ཀི་མ། །ཕྱོགས་དུས་སྐྱབས་གནས་རྒྱ་མཚོའི་ཚོགས་ཐམས་ཅད། ཏིལ་གྱི་གོང་བུ་ཁ་ཕྱེ་ལྟ་བུར་</span>བསམ། </span></span></a>
+
+    <a href="sessions/transcript_A14.html#hypertranscript1=0.00,138.15"><span class="session-a"><span class="session">A14 </span><span class="tibetan"><span class="big">ཧཱུྃ༔ ཨོ་རྒྱན་ཡུལ་གྱི་ནུབ་བྱང་མཚམས༔ པདྨ་གེ་སར་སྡོང་པོ་ལ༔ ཡ་མཚན་མཆོག་གི་དངོས་གྲུབ་བརྙེས༔ པདྨ་འབྱུང་གནས་ཞེས་སུ་གྲགས༔ འཁོར་དུ་མཁའ་འགྲོ་མང་པོས་བསྐོར༔ ཁྱེད་ཀྱི་རྗེས་སུ་བདག་བསྒྲུབ་ཀྱི༔ བྱིན་གྱིས་རླབས་ཕྱིར་གཤེགས་སུ་གསོལ༔ གུ་རུ་པདྨ་སིདྡྷི་ཧཱུྃ༔ </span>གིས་སྤྱན་དྲངས་དམ་ཡེ་དབྱེར་མེད་དུ་བསྟིམ་ལ། </span></span></a>
+
+<a href="sessions/transcript_A15.html#hypertranscript1=0.00,161.87"><span class="session-a"><span class="session">A15 </span><span class="tibetan">དེ་ཡང་ཐམས་ཅད་མཁྱེན་པ་ཐོབ་པའི་ལམ་ཤེས་པ་ནི་དགེ་བའི་བཤེས་གཉེན་ལ་རག་ལས་ཤིང༌། ལམ་སྟོན་བཤེས་གཉེན་མཚན་ལྡན་ནི་སངས་རྒྱས་ལས་ཀྱང་བཀའ་དྲིན་ཆེ་བར་ཤེས་པའི་བློས། ཚོགས་ཀྱི་ཞིང་ཁྱད་པར་ཅན་ལ་བསགས་སྦྱང་སྙིང་པོ་ཡན་ལག་བདུན་པ་འབུལ་བ་ནི། </span></span></a>
+    <a href="sessions/transcript_A15.html#hypertranscript1=161.87,265.28"><span class="session-a"><span class="session">A15 </span><span class="tibetan">སོ་སོའི་དམིགས་པ་རྣམས་དྲན་བཞིན་པས། <span class="big">བླ་མ་རྩ་གསུམ་ལྷ་ཚོགས་ལ༔ སྒོ་གསུམ་གུས་པས་ཕྱག་འཚལ་ལོ༔ </span></span></span></a>
+    <a href="sessions/transcript_A15.html#hypertranscript1=265.28,451.86"><span class="session-a"><span class="session">A15 </span><span class="tibetan"><span class="big">ཀུན་བཟང་སྒྱུ་འཕྲུལ་དྲྭ་བས་མཆོད༔ </span></span></span></a>
+    <a href="sessions/transcript_A15.html#hypertranscript1=451.86,725.65"><span class="session-a"><span class="session">A15 </span><span class="tibetan"><span class="big">སྡིག་ལྟུང་ཉེས་པར་བྱས་ཀུན་བཤགས༔ </span></span></span></a>
+    <a href="sessions/transcript_A15.html#hypertranscript1=725.65,1045.55"><span class="session-a"><span class="session">A15 </span><span class="tibetan"><span class="big">རྣམ་གྲོལ་དགེ་ལ་རྗེས་ཡི་རང༔ </span></span></span></a>
+    <a href="sessions/transcript_A15.html#hypertranscript1=1045.55,1200.58"><span class="session-a"><span class="session">A15 </span><span class="tibetan"><span class="big">ཟབ་རྒྱས་ཆོས་འཁོར་བསྐོར་བར་བསྐུལ༔ </span></span></span></a>
+    <a href="sessions/transcript_A15.html#hypertranscript1=1200.58,1258.76"><span class="session-a"><span class="session">A15 </span><span class="tibetan"><span class="big">མྱ་ངན་མི་འདའ་བཞུགས་གསོལ་འདེབས༔ </span></span></span></a>
+    <a href="sessions/transcript_A15.html#hypertranscript1=1258.76,1399.27"><span class="session-a"><span class="session">A15 </span><span class="tibetan"><span class="big">དགེ་ཚོགས་བྱང་ཆུབ་ཆེན་པོར་བསྔོ༔ ཀུན་ཀྱང་བླ་མའི་གནས་ཐོབ་ཤོག</span></span></span></a>
+<a href="sessions/transcript_A15.html#hypertranscript1=1399.27,1584.93"><span class="session-a"><span class="session">A15 </span><span class="tibetan">སྔར་སྐྱབས་འགྲོའི་སྐབས་ཕྱག་འབུམ་མ་སོང་ན་ཡན་ལག་བདུན་པ་དང་སྦྲགས་ནས་ཕྱག་འཚལ། </span></span></a>
+    <br><br>
+
+<a href="sessions/transcript_A16.html#hypertranscript1=0.00,242.65"><span class="session-a"><span class="session">A16 </span><span class="tibetan">རིན་པོ་ཆེ་སོགས་ཇི་ལྟར་འབྱོར་བའི་མཎྜལ་ལ། སྨན་འབྲུ་རིན་ཆེན་སྣ་ཚོགས་པའི་ཚོམ་བུ་བཀོད་དེ། </span></span></a>
+    <a href="sessions/transcript_A16.html#hypertranscript1=242.65,603.51"><span class="session-a"><span class="session">A16 </span><span class="tibetan"><span class="big">ཨོཾ་ཨཱཿཧཱུྃ། སྐུ་གསུམ་ཞིང་ཁམས་ལོངས་སྤྱོད་དང༌། །ཕྱི་ནང་གསང་བའི་མཆོད་པའི་སྤྲིན། །དཀོན་མཆོག་རྩ་བ་གསུམ་ལ་འབུལ། </span></span></span></a>
+    <a href="sessions/transcript_A16.html#hypertranscript1=603.51,652.57"><span class="session-a"><span class="session">A16 </span><span class="tibetan"><span class="big">བཞེས་ནས་མཆོག་ཐུན་དངོས་གྲུབ་སྩོལ། ཨོཾ་ཨཱཿཧཱུྃ་གུ་རུ་དྷཱེ་ཝ་ཌཱ་ཀི་ནི་ས་པཱ་རི་ཝ་ར་རཏྣ་མཎྜལ་པཱུ་ཛ་མེ་གྷ་ཨཱཿཧཱུྃ། </span>གྲངས་ཇི་ལྟར་འོས་པ་འབུལ། </span></span></a>
+<a href="sessions/transcript_A16.html#hypertranscript1=652.57,1074.49"><span class="session-a"><span class="session">A16 </span><span class="tibetan">འདི་ལྟར་ཐར་པ་དང་ཐམས་ཅད་མཁྱེན་པའི་གོ་འཕང་ཐོབ་པ་ནི། རང་སེམས་ལྷན་ཅིག་སྐྱེས་པའི་ཡེ་ཤེས་རྟོགས་པ་ལ་རག་ལས་ཤིང༌། རྟོགས་པ་སྐྱེ་བ་བླ་མའི་བྱིན་རླབས་དང༌། བྱིན་རླབས་འཇུག་པ་མོས་གུས་ཀྱི་རྟེན་འབྲེལ་ཁོ་ན་ལ་རག་ལས་པས་ན། རང་གི་རྩ་བའི་བླ་མ་ཉིད་ཕྱོགས་དུས་ཀྱི་སངས་རྒྱས་ཐམས་ཅད་ཀྱི་མཁྱེན་བརྩེ་ནུས་པའི་ཡེ་ཤེས་གཅིག་ཏུ་བསྡུས་པའི་བདག་ཉིད། འགྲོ་བ་སྒྲོལ་བའི་སླད་དུ་རང་རང་དང་རིགས་མཐུན་པའི་བླ་མའི་སྐུར་སྣང་བས། གསུང་གིས་ལམ་བདེན་གྱི་ཆོས་འདོམས་ཤིང༌། དེ་ནས་འགོག་བདེན་གྱི་འབྲས་བུ་ལ་སྦྱོར་བས་</span></span></a>
+
+<a href="sessions/transcript_A17.html#hypertranscript1=0.00,218.13"><span class="session-a"><span class="session">A17 </span><span class="tibetan">སངས་རྒྱས་ལས་ཀྱང་བཀའ་དྲིན་ཆེ་བར་ཐག་བཅད། ངེས་ཤེས་བསྐྱེད། བློ་སྙིང་བྲང་གསུམ་ལིང་གིས་གཏད། འདི་ནས་བྱང་ཆུབ་མ་ཐོབ་ཀྱི་བར་དུ་སྐྱིད་སྡུག་ལེགས་ཉེས་ཅི་བྱུང་ཡང་ཁྱེད་མཁྱེན་ནོ་སྙམ་པའི་བློ་གཏད་ལིང་བསྐྱུར་གྱི་ཚུལ་གྱིས་ལུས་ཀྱི་བ་སྤུ་གཡོ། མིག་མཆི་མ་འཁྲུགས། བློ་སྣ་བླ་མས་འཕྲོག་པ། བསམ་རྒྱུ་བླ་མ་ལས་མེད་པ། ལུས་སེམས་ཚུགས་མི་ཐུབ་པའི་མོས་གུས་དང་གདུང་ཤུགས་དྲག་པོས། </span></span></a>
+    <a href="sessions/transcript_A17.html#hypertranscript1=218.13,286.57"><span class="session-a"><span class="session">A17 </span><span class="tibetan">འོད་གསལ་སྙིང་ཐིག་གི་གསོལ་འདེབས་བྱིན་རླབས་མྱུར་ལམ། བརྒྱུད་འདེབས་བྱིན་རླབས་སྤྲིན་ཕུང་བཅས་སྔོན་དུ་འགྲོ་བས།  <span class="big">སྐྱབས་གནས་ཀུན་འདུས་རྡོ་རྗེ་འཆང༔ དཔལ་ལྡན་བླ་མ་རིན་པོ་ཆེ༔ གསོལ་བ་འདེབས་སོ་བྱིན་གྱིས་རློབས༔ དབང་དང་དངོས་གྲུབ་བསྩལ་དུ་གསོལ༔ </span>ཞེས་གསོལ་འདེབས་བསྡུས་པ་ཉིད་ཅི་ནུས་དང༌།  <span class="big">ཨོཾ་ཨཱཿཧཱུྃ་བཛྲ་མ་ཧཱ་གུ་རུ་ཛྙཱ་ན་སརྦ་སིདྡྷི་ཧཱུྃ༔ </span>ཐུགས་དམ་རྒྱུད་བསྐུལ་གྱི་བཟླས་པ་ཆིག་དྲིལ་བྱ། </span></span></a>
+
+<a href="sessions/transcript_A18.html#hypertranscript1=0.00,224.37"><span class="session-a"><span class="session">A18 </span><span class="tibetan">ཐུན་མཐར། </span></span></a>
+    <a href="sessions/transcript_A18.html#hypertranscript1=224.37,300.90"><span class="session-a"><span class="session">A18 </span><span class="tibetan"><span class="big">གནས་གསུམ་འབྲུ་གསུམ་འོད་ཟེར་གྱིས། །སྐུ་གསུང་ཐུགས་ཀྱི་བྱིན་རླབས་དང༌། </span></span></span></a>
+    <a href="sessions/transcript_A18.html#hypertranscript1=300.90,376.88"><span class="session-a"><span class="session">A18 </span><span class="tibetan"><span class="big">དབང་བཞི་ཐོབ་ཅིང་</span></span></span></a>
+    <a href="sessions/transcript_A18.html#hypertranscript1=376.88,445.12"><span class="session-a"><span class="session">A18 </span><span class="tibetan"><span class="big">ལམ་བཞི་སྒོམ། །སྒྲིབ་བཞི་དག་ཅིང་</span></span></span></a>
+    <a href="sessions/transcript_A18.html#hypertranscript1=445.12,614.82"><span class="session-a"><span class="session">A18 </span><span class="tibetan"><span class="big">སྐུ་བཞི་ཡི། འབྲས་བུ་མངོན་གྱུར་སྐལ་ལྡན་བྱས། </span></span></span></a>
+    <a href="sessions/transcript_A18.html#hypertranscript1=614.82,684.62"><span class="session-a"><span class="session">A18 </span><span class="tibetan"><span class="big">བླ་མ་འོད་ཞུ་རང་ལ་ཐིམ། །དབྱེར་མེད་</span></span></span></a>
+    <a href="sessions/transcript_A18.html#hypertranscript1=684.62,746.13"><span class="session-a"><span class="session">A18 </span><span class="tibetan"><span class="big">མ་བཅོས་ལྷུག་པར་བཞག །</span>བླ་མའི་སྐུ་གསུང་ཐུགས་དང་རང་གི་སྒོ་གསུམ་དབྱེར་མེད་དུ་བསྲེས་ཏེ་རང་སེམས་རིག་སྟོང་རྗེན་པ་སྐད་ཅིག་མའི་རང་མདངས་བསྐྱང༌། </span></span></a>
+    <br><br>
+
+<a href="sessions/transcript_A18.html#hypertranscript1=746.13,1151.56"><span class="session-a"><span class="session">A18 </span><span class="tibetan">ཐུན་མཚམས་རྣམས་སུ་ཐུན་མོང་ཁྱེར་སོ་གསུམ་གྱི་རྣལ་འབྱོར་ལ་བསླབ། </span></span></a>
+    <a href="sessions/transcript_A18.html#hypertranscript1=1151.56,1228.99"><span class="session-a"><span class="session">A18 </span><span class="tibetan"><span class="big">དཔལ་ལྡན་རྩ་བའི་བླ་མ་རིན་པོ་ཆེ། །བདག་གི་སྙིང་གར་པདྨའི་གདན་བཞུགས་ལ། །བཀའ་དྲིན་ཆེན་པོའི་སྒོ་ནས་རྗེས་བཟུང་སྟེ། །སྐུ་གསུང་ཐུགས་ཀྱི་དངོས་གྲུབ་བསྩལ་དུ་གསོལ། །སྐྱེ་བ་ཀུན་ཏུ་ཡང་དག་བླ་མ་དང༌། །འབྲལ་མེད་ཆོས་ཀྱི་དཔལ་ལ་ལོངས་སྤྱོད་ཅིང༌། །ས་དང་ལམ་གྱི་ཡོན་ཏན་རབ་རྫོགས་ནས། །རྡོ་རྗེ་འཆང་གི་གོ་འཕང་མྱུར་ཐོབ་ཤོག །དཔལ་ལྡན་བླ་མའི་རྣམ་པར་ཐར་པ་ལ། །སྐད་ཅིག་ཙམ་ཡང་ལོག་ལྟ་མི་སྐྱེ་ཞིང༌། ཅི་མཛད་ལེགས་པར་མཐོང་བའི་མོས་གུས་ཀྱིས། །བླ་མའི་བྱིན་རླབས་སེམས་ལ་འཇུག་པར་ཤོག །</span>བསྔོ་སྨོན་བྱས་ཏེ་
+    <br><br>
+
+    ཉམས་སུ་བླང་བའི་ཕན་ཡོན་ཀྱང་རྡོ་རྗེའི་ཚིག་རྐང་ལས། འདིས་ནི་མཆོག་གི་དངོས་གྲུབ་ཀྱང༔ མྱུར་བ་ཉིད་དུ་མངོན་གྱུར་ན༔ ཐུན་མོང་དངོས་གྲུབ་སྨོས་ཅི་དགོས༔ ཡིད་བཞིན་ནོར་བུའི་མན་ངག་གོ༔ ཞེས་གསུངས་པའི་མཚོན་ཕན་ཡོན་མཐའ་ཡས་པ་མདོ་རྒྱུད་མན་ངག་དུ་མ་ནས་གསུངས་པ་ལྟར་ཉམས་སུ་ལེན་པ་ཅིས་ཀྱང་གལ་ཆེའོ། །</span></span></a>
+<a href="sessions/transcript_A18.html#hypertranscript1=1228.99,1266.43"><span class="session-a"><span class="session">A18 </span><span class="tibetan">ཅེས་པའང་རྒྱལ་ཁབ་ཕ་རན་སེའི་ཐེག་མཆོག་རིན་ཆེན་གླིང་དུ་སྒྲུབ་སྡེ་གསར་འཇུགས་སྐབས་རྙིང་སྔགས་རྒན་པོ་མངྒ་ལ་ཤྲཱི་བྷཱུ་ཏིས་རང་ཉིད་ཀྱི་བསམ་གཏན་ཁང་བུ་བཀྲ་ཤིས་དཔལ་འབར་གླིང་དུ་བྲིས་པ་ཐེག་མཆོག་སྙིང་པོའི་བསྟན་པ་ལ་བྱ་བ་བྱེད་ནུས་པར་གྱུར་ཅིག། །། </span></span></a>
+
+</span>
+  </div>
+</body>
+</html>
